@@ -67,14 +67,21 @@ abstract class RedisConnectionConfiguration {
 			config.setPort(connectionInfo.getPort());
 			config.setUsername(connectionInfo.getUsername());
 			config.setPassword(RedisPassword.of(connectionInfo.getPassword()));
+			
+			if (!this.properties.isDatabaseDefault() && connectionInfo.getDatabase() != null) {
+				config.setDatabase(String.valueOf(connectionInfo.getDatabase()));
+			}
+			else {
+				config.setDatabase(this.properties.getDatabase());
+			}
 		}
 		else {
 			config.setHostName(this.properties.getHost());
 			config.setPort(this.properties.getPort());
 			config.setUsername(this.properties.getUsername());
 			config.setPassword(RedisPassword.of(this.properties.getPassword()));
+			config.setDatabase(this.properties.getDatabase());
 		}
-		config.setDatabase(this.properties.getDatabase());
 		return config;
 	}
 
@@ -210,6 +217,11 @@ abstract class RedisConnectionConfiguration {
 
 		String getPassword() {
 			return this.password;
+		}
+		
+		String getDatabase() {
+			String database = this.uri.getPath() == null ? null : this.uri.getPath().substring(1);
+			return database == null || database.isEmpty() ? null : database;
 		}
 
 	}
