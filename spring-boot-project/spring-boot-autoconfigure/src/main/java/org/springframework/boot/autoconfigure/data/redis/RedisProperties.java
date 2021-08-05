@@ -34,6 +34,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "spring.redis")
 public class RedisProperties {
+	/**
+	 * Whether database attribute has kept its default value or was defined by {@code spring.redis.database} property.
+	 */
+	private boolean databaseDefault = true;
 
 	/**
 	 * Database index used by the connection factory.
@@ -42,7 +46,7 @@ public class RedisProperties {
 
 	/**
 	 * Connection URL. Overrides host, port, and password. User is ignored. Example:
-	 * redis://user:password@example.com:6379
+	 * redis://user:password@example.com:6379/database
 	 */
 	private String url;
 
@@ -99,11 +103,16 @@ public class RedisProperties {
 
 	private final Lettuce lettuce = new Lettuce();
 
+	public int isDatabaseDefault() {
+		return this.databaseDefault;
+	}
+
 	public int getDatabase() {
 		return this.database;
 	}
 
 	public void setDatabase(int database) {
+		this.databaseDefault = false;
 		this.database = database;
 	}
 
