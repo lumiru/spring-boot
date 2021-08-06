@@ -220,7 +220,7 @@ abstract class RedisConnectionConfiguration {
 		}
 		
 		String getDatabase() {
-			String database = this.uri.getPath() == null ? null : this.uri.getPath().substring(1);
+			String database = this.uri.getPath() == null && this.url.getPath().length() > 1 ? null : this.uri.getPath().substring(1);
 			return database == null || database.isEmpty() ? null : database;
 		}
 
